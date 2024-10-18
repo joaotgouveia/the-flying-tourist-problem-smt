@@ -87,19 +87,19 @@ def solve(cities, flights):
     maxId = len(flights)
     solver = Optimize()
 
-    # Uninterpreted constant for every flight we'll take, in order
+    # Id of every flight we'll take, in order
     f = [Int("f_%i" % i) for i in range(flightsToTake)]
 
-    # Uninterpreted constant for the cost of every flight we'll take, in order
+    # Cost of every flight we'll take, in order
     cost = [Int("c_%i" % i) for i in range(flightsToTake)]
 
-    # Uninterpreted constant for the day of every flight we'll take, in order
+    # Day of every flight we'll take, in order
     date = [Int("D_%i" % i) for i in range(flightsToTake)]
 
-    # Uninterpreted constant for the arrival of every flight we'll take, in order
+    # Arrival of every flight we'll take, in order
     arrival = [Int("a_%i" % i) for i in range(flightsToTake)]
 
-    # Uninterpreted constant for the departure of every flight we'll take, in order
+    # Departure of every flight we'll take, in order
     departure = [Int("d_%i" % i) for i in range(flightsToTake)]
 
     for flightId in range(maxId):
