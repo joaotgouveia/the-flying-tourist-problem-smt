@@ -119,7 +119,7 @@ def solve(cities, flights):
         )
 
     # We must pick the ids from the available flights
-    solver.add([And(f_i > 0, f_i < maxId) for f_i in f])
+    solver.add([And(f_i >= 0, f_i < maxId) for f_i in f])
 
     # Our first flight must depart from the base
     solver.add(departure[0] == 0)
