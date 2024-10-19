@@ -1,5 +1,5 @@
 import datetime
-from z3 import Optimize, And, Distinct, Implies, Int, Sum
+from z3 import Optimize, And, Distinct, Implies, Sum, IntVector, unsat
 
 
 def equal_flights(f1, f2):
@@ -88,19 +88,19 @@ def solve(cities, flights):
     solver = Optimize()
 
     # Id of every flight we'll take, in order
-    f = [Int("f_%i" % i) for i in range(flightsToTake)]
+    f = IntVector("f", flightsToTake)
 
     # Cost of every flight we'll take, in order
-    cost = [Int("c_%i" % i) for i in range(flightsToTake)]
+    cost = IntVector("c", flightsToTake)
 
     # Day of every flight we'll take, in order
-    date = [Int("D_%i" % i) for i in range(flightsToTake)]
+    date = IntVector("D", flightsToTake)
 
     # Arrival of every flight we'll take, in order
-    arrival = [Int("a_%i" % i) for i in range(flightsToTake)]
+    arrival = IntVector("a", flightsToTake)
 
     # Departure of every flight we'll take, in order
-    departure = [Int("d_%i" % i) for i in range(flightsToTake)]
+    departure = IntVector("d", flightsToTake)
 
     for flightId in range(maxId):
         solver.add(
@@ -146,7 +146,9 @@ def solve(cities, flights):
     # We want to minimize the total cost of our trip
     solver.minimize(Sum(cost))
 
-    solver.check()
+    if solver.check() == unsat:
+        return 0, []
+
     model = solver.model()
     cost = sum([model[c_i].as_long() for c_i in cost])
     flightsTaken = [model[f_i].as_long() for f_i in f]
