@@ -94,13 +94,13 @@ def solve(cities, flights):
     cost = IntVector("c", flightsToTake)
 
     # Day of every flight we'll take, in order
-    date = IntVector("D", flightsToTake)
+    date = IntVector("d", flightsToTake)
 
     # Arrival of every flight we'll take, in order
     arrival = IntVector("a", flightsToTake)
 
     # Departure of every flight we'll take, in order
-    departure = IntVector("d", flightsToTake)
+    origin = IntVector("o", flightsToTake)
 
     for flightId in range(maxId):
         solver.add(
@@ -111,7 +111,7 @@ def solve(cities, flights):
                         cost[i] == flights[flightId]["cost"],
                         date[i] == flights[flightId]["day"],
                         arrival[i] == cities[flights[flightId]["arrival"]]["id"],
-                        departure[i] == cities[flights[flightId]["departure"]]["id"],
+                        origin[i] == cities[flights[flightId]["departure"]]["id"],
                     ),
                 )
                 for i in range(flightsToTake)
@@ -122,7 +122,7 @@ def solve(cities, flights):
     solver.add([And(f_i >= 0, f_i < maxId) for f_i in f])
 
     # Our first flight must depart from the base
-    solver.add(departure[0] == 0)
+    solver.add(origin[0] == 0)
 
     # Our last flight must arrive at the base
     solver.add(arrival[-1] == 0)
@@ -132,7 +132,7 @@ def solve(cities, flights):
 
     for i in range(flightsToTake - 1):
         # We must depart from the city we previously arrived at
-        solver.add(departure[i + 1] == arrival[i])
+        solver.add(origin[i + 1] == arrival[i])
 
         # We must respects the provided stay times
         for airport in cities:
