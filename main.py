@@ -1,4 +1,5 @@
 import datetime
+import z3
 from z3 import Optimize, And, Distinct, Implies, Sum, IntVector, unsat
 
 
@@ -83,6 +84,7 @@ def printModel(model, cities, flights):
 
 
 def solve(cities, flights):
+    z3.set_param("rewriter.elim_and", True)
     flightsToTake = len(cities.keys())
     maxId = len(flights)
     solver = Optimize()
